@@ -1,0 +1,15 @@
+{
+  "system_status": "ONLINE",
+  "anti_ban_version": "V12.4",
+  "security": {
+    "bypass_hyperion": "E8 ?? ?? ?? ?? 85 C0 74 08",
+    "block_report_packets": true,
+    "disable_telemetry": true,
+    "hook_check_bypass": "48 83 EC 28 E8 ?? ?? ?? ?? 48 83 C4 28 C3"
+  },
+  "smart_patterns": {
+    "universal_hook": "55 48 89 E5 41 57 41 56 41 55 41 54 53 48 81 EC ?? ?? ?? ??",
+    "lua_vm_load": "48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ??"
+  },
+  "announcement": "Anti-Ban System Updated! Protection: ACTIVE."
+}
