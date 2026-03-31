@@ -2,190 +2,175 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INJECTOR ROBLOX V12 FINAL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
-        :root { --neon: #00f2ff; --bg: #050505; --card-bg: rgba(15, 15, 15, 0.98); }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
         
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            background: var(--bg); font-family: 'Segoe UI', sans-serif; 
-            color: #fff; overflow: hidden; display: flex; 
-            flex-direction: column; align-items: center; justify-content: center;
+        body { 
+            background: transparent; 
+            color: #ffffff; 
+            font-family: sans-serif; 
+            margin: 0; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            overflow: hidden;
         }
 
-        /* MAIN INJECTOR BOX */
-        .injector-box {
-            background: var(--card-bg);
-            border: 1px solid var(--neon);
-            border-radius: 15px;
-            width: 85%;
-            max-width: 320px;
-            padding: 20px;
-            box-shadow: 0 0 30px rgba(0, 242, 255, 0.15);
-            z-index: 10;
-            margin-bottom: 20px;
+        .wrapper {
+            position: relative;
+            width: 240px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        h2 { 
-            font-size: 1rem; text-align: center; color: var(--neon); 
-            margin: 0 0 15px 0; letter-spacing: 2px; text-transform: uppercase;
-            border-bottom: 1px solid #222; padding-bottom: 10px;
+        /* MAIN BOX */
+        .main-box {
+            width: 100%;
+            background: #121212;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
 
-        input, textarea {
-            width: 100%; background: #000; border: 1px solid #333; color: #fff;
-            padding: 12px; margin-bottom: 12px; border-radius: 8px; outline: none; 
-            box-sizing: border-box; font-family: monospace; font-size: 0.8rem;
-            border-left: 3px solid var(--neon);
-        }
+        .header { color: #00ffff; font-weight: bold; text-align: center; font-size: 14px; margin-bottom: 5px; text-shadow: 0 0 5px #00ffff; }
+        input, textarea { width: 100%; background: #1e1e1e; border: 1px solid #333; color: #00ff00; padding: 10px; border-radius: 6px; font-size: 11px; }
 
-        .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-row { display: flex; gap: 5px; }
         
-        button { cursor: pointer; transition: 0.3s; border-radius: 6px; font-weight: bold; text-transform: uppercase; }
+        /* BUTTON STYLE NA MAY FEEDBACK */
+        button { 
+            flex: 1; background: #2a2a2a; color: white; border: 1px solid #444; 
+            padding: 10px; border-radius: 6px; cursor: pointer; font-size: 11px; 
+            font-weight: bold; transition: 0.1s; 
+        }
+        button:active { transform: scale(0.95); background: #444; } /* Lilitaw na napindot */
 
-        .btn-sec { background: #1a1a1a; border: 1px solid #444; color: #888; padding: 10px; font-size: 0.7rem; }
-        .btn-sec:hover { border-color: var(--neon); color: #fff; background: #222; }
+        .inject-btn { 
+            background: #00ffff; color: #000; border: none; padding: 12px; 
+            font-weight: bold; border-radius: 8px; margin-top: 5px; 
+        }
+        .inject-btn:active { background: #00cccc; transform: scale(0.97); }
 
-        .btn-inject {
-            width: 100%; background: var(--neon); color: #000; border: none;
-            padding: 14px; margin-top: 15px; font-size: 0.85rem; letter-spacing: 2px;
-            box-shadow: 0 0 15px var(--neon);
+        /* LIST POPUP OVERLAY */
+        .list-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #121212; border: 2px solid #00ffff;
+            border-radius: 12px; z-index: 100; display: none;
+            padding: 10px; flex-direction: column;
         }
 
-        /* MODAL LIST */
-        #hubModal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 100; align-items: center; justify-content: center;
-        }
-        .modal-content { background: #0d1117; border: 1px solid var(--neon); width: 85%; max-width: 300px; padding: 20px; border-radius: 12px; }
-        #listItems { max-height: 250px; overflow-y: auto; margin-top: 15px; }
-        .save-item { background: #161b22; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--neon); }
-        .save-item span { font-size: 0.8rem; display: block; margin-bottom: 8px; color: #ccc; }
-        .save-btns { display: flex; gap: 8px; }
-        .btn-exec { flex: 2; background: var(--neon); border: none; font-size: 0.65rem; padding: 8px; color: #000; }
-        .btn-del { flex: 1; background: #ff4444; color: #fff; border: none; font-size: 0.65rem; padding: 8px; }
+        .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .list-title { color: #00ffff; font-size: 12px; font-weight: bold; }
+        
+        .close-btn { background: #ff4444; color: white; border: none; width: 25px; height: 25px; border-radius: 5px; cursor: pointer; font-weight: bold; }
 
-        /* FOOTER & DOWNLOAD AREA */
-        .footer-area {
-            display: flex; flex-direction: column; align-items: center; gap: 15px;
+        .scroll-area { flex: 1; overflow-y: auto; }
+
+        .script-item { 
+            background: #1a1a1a; padding: 8px; margin-bottom: 6px; border-radius: 6px; 
+            display: flex; justify-content: space-between; align-items: center; border-left: 3px solid #00ffff;
         }
 
-        .roblox-icon {
-            width: 50px; height: 50px;
-            animation: jump 1.5s ease-in-out infinite;
-            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
-        }
-        @keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .item-name { font-size: 10px; color: #bbb; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        
+        /* MALALAKING EXE AT DEL BUTTONS */
+        .item-btns { display: flex; gap: 4px; }
+        .item-btns button { width: 55px; padding: 8px 0; border: none; font-size: 10px; }
+        .exe { background: #00ff00; color: #000; }
+        .del { background: #ff4444; color: #fff; }
 
-        .btn-download {
-            background: transparent; border: 1px dashed var(--neon); color: var(--neon);
-            padding: 10px 20px; font-size: 0.75rem; border-radius: 50px;
-            text-decoration: none; display: flex; align-items: center; gap: 10px;
-            transition: 0.3s; font-weight: bold;
-        }
-        .btn-download:hover { background: var(--neon); color: #000; border-style: solid; box-shadow: 0 0 15px var(--neon); }
-        .arrow { font-size: 1rem; animation: bounceDown 1s infinite; }
-        @keyframes bounceDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
-
-        .dev-tag { font-size: 0.6rem; color: #444; letter-spacing: 2px; margin-top: 5px; }
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-thumb { background: #00ffff; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-<div class="injector-box">
-    <h2>INJECTOR ROBLOX</h2>
-    
-    <input type="text" id="sName" placeholder="SCRIPT_NAME">
-    <textarea id="sCode" rows="5" placeholder="PASTE_LUAU_CODE"></textarea>
-
-    <div class="btn-row">
-        <button class="btn-sec" onclick="saveScript()">[ SAVE ]</button>
-        <button class="btn-sec" onclick="openHub()">[ LIST ]</button>
-    </div>
-
-    <button class="btn-inject" onclick="execute()">INITIALIZE INJECTION</button>
-</div>
-
-<div id="hubModal">
-    <div class="modal-content">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid #333; padding-bottom: 10px;">
-            <span style="font-size:0.8rem; color:var(--neon); font-weight:bold;">SAVED_SCRIPTS</span>
-            <button onclick="closeHub()" style="background:none; border:none; color:#fff; font-size:1.5rem;">✕</button>
+    <div class="wrapper">
+        <div class="main-box">
+            <div class="header">ROBLOX __ INJECTOR</div>
+            <input type="text" id="nInput" placeholder="SCRIPT NAME">
+            <textarea id="cInput" rows="2" placeholder="PASTE LUA/LINK"></textarea>
+            <div class="btn-row">
+                <button type="button" onclick="save()">SAVE</button>
+                <button type="button" onclick="showList()">LIST</button>
+            </div>
+            <button type="button" class="inject-btn" onclick="execute(document.getElementById('cInput').value)">INITIALIZE INJECTION</button>
         </div>
-        <div id="listItems"></div>
+
+        <div class="list-overlay" id="listMenu">
+            <div class="list-header">
+                <span class="list-title">SAVED LIST</span>
+                <button class="close-btn" onclick="hideList()">X</button>
+            </div>
+            <div class="scroll-area" id="listArea"></div>
+        </div>
     </div>
-</div>
 
-<div class="footer-area">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg" class="roblox-icon" alt="Roblox Icon">
-    
-    <a href="PALITAN_MO_ITO_NG_LINK_MO" id="downloadLink" class="btn-download" target="_blank">
-        DOWNLOAD APP VERSION <span class="arrow">⬇</span>
-    </a>
+    <script>
+        let storage = JSON.parse(localStorage.getItem('nico_pro_db') || '[]');
 
-    <div class="dev-tag">DEVELOPED BY: <b>NICO SARMIENTO</b></div>
-</div>
-
-<script>
-    function saveScript() {
-        const name = document.getElementById('sName').value || "Script_" + Math.floor(Math.random()*999);
-        const code = document.getElementById('sCode').value;
-        if(!code) return alert("Error: Empty code!");
-        let db = JSON.parse(localStorage.getItem('roblox_v12')) || [];
-        db.push({ name, code });
-        localStorage.setItem('roblox_v12', JSON.stringify(db));
-        document.getElementById('sName').value = "";
-        document.getElementById('sCode').value = "";
-        alert("Script Saved!");
-    }
-
-    function openHub() {
-        const list = document.getElementById('listItems');
-        list.innerHTML = "";
-        let db = JSON.parse(localStorage.getItem('roblox_v12')) || [];
-        if(db.length === 0) list.innerHTML = "<p style='font-size:0.7rem; text-align:center;'>Empty Database</p>";
-        db.forEach((item, index) => {
-            list.innerHTML += `
-                <div class="save-item">
-                    <span>${item.name}</span>
-                    <div class="save-btns">
-                        <button class="btn-exec" onclick="load(${index})">EXECUTE</button>
-                        <button class="btn-del" onclick="del(${index})">DEL</button>
-                    </div>
-                </div>`;
-        });
-        document.getElementById('hubModal').style.display = "flex";
-    }
-
-    function closeHub() { document.getElementById('hubModal').style.display = "none"; }
-
-    function load(i) {
-        let db = JSON.parse(localStorage.getItem('roblox_v12')) || [];
-        document.getElementById('sCode').value = db[i].code;
-        closeHub(); 
-        execute();
-    }
-
-    function del(i) {
-        let db = JSON.parse(localStorage.getItem('roblox_v12')) || [];
-        db.splice(i, 1);
-        localStorage.setItem('roblox_v12', JSON.stringify(db));
-        openHub();
-    }
-
-    // GUMAGANA NA ANG BRIDGE DITO PARA SA SKETCHWARE
-    function execute() {
-        const code = document.getElementById('sCode').value;
-        if(!code) return alert("Nothing to inject!");
-        
-        if(window.AndroidInterface) {
-            window.AndroidInterface.injectScript(code);
-        } else {
-            alert("Injection process started (Debug Mode)");
+        function showList() {
+            render();
+            document.getElementById('listMenu').style.display = "flex";
         }
-    }
-</script>
 
+        function hideList() {
+            document.getElementById('listMenu').style.display = "none";
+        }
+
+        function render() {
+            const area = document.getElementById('listArea');
+            area.innerHTML = storage.length ? '' : '<div style="text-align:center;font-size:10px;color:#555;margin-top:20px;">No Saved Scripts</div>';
+            storage.forEach((item, i) => {
+                area.innerHTML += `<div class="script-item">
+                    <span class="item-name">${item.n}</span>
+                    <div class="item-btns">
+                        <button class="exe" onclick="execute(\`${item.c}\`)">EXE</button>
+                        <button class="del" onclick="remove(${i})">DEL</button>
+                    </div></div>`;
+            });
+        }
+
+        function save() {
+            const n = document.getElementById('nInput');
+            const c = document.getElementById('cInput');
+            if(!n.value || !c.value) return;
+            storage.push({n: n.value, c: c.value});
+            localStorage.setItem('nico_pro_db', JSON.stringify(storage));
+            n.value = ''; c.value = ''; // Mawawala ang text pagka-save
+            if(window.Android) window.Android.showMessage("Script Saved!");
+            render();
+        }
+
+        function remove(i) {
+            storage.splice(i, 1);
+            localStorage.setItem('nico_pro_db', JSON.stringify(storage));
+            render();
+        }
+
+        // EXECUTE FUNCTION NA MAY FEEDBACK
+        function execute(code) {
+            if(!code) return;
+            if(window.Android) {
+                // Tatawag sa Sketchware
+                window.Android.startInjection(code);
+                // Magpapakita ng confirmation toast
+                window.Android.showMessage("Script Executed!");
+            } else {
+                alert("Executed: " + code.substring(0, 20) + "...");
+            }
+        }
+        
+        window.onload = render;
+    </script>
 </body>
-</html>
+                    </html>
+                                                                   
