@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INJECTOR ROBLOX V12</title>
+    <title>INJECTOR ROBLOX V12 FINAL</title>
     <style>
         :root { --neon: #00f2ff; --bg: #050505; --card-bg: rgba(15, 15, 15, 0.98); }
         
@@ -120,7 +120,7 @@
 <div class="footer-area">
     <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg" class="roblox-icon" alt="Roblox Icon">
     
-    <a href="https://www.google.com" id="downloadLink" class="btn-download" target="_blank">
+    <a href="PALITAN_MO_ITO_NG_LINK_MO" id="downloadLink" class="btn-download" target="_blank">
         DOWNLOAD APP VERSION <span class="arrow">⬇</span>
     </a>
 
@@ -128,7 +128,6 @@
 </div>
 
 <script>
-    // Lahat ng dating logic ay working dito (Save, List, Exec, Delete)
     function saveScript() {
         const name = document.getElementById('sName').value || "Script_" + Math.floor(Math.random()*999);
         const code = document.getElementById('sCode').value;
@@ -164,7 +163,8 @@
     function load(i) {
         let db = JSON.parse(localStorage.getItem('roblox_v12')) || [];
         document.getElementById('sCode').value = db[i].code;
-        closeHub(); execute();
+        closeHub(); 
+        execute();
     }
 
     function del(i) {
@@ -174,12 +174,18 @@
         openHub();
     }
 
+    // GUMAGANA NA ANG BRIDGE DITO PARA SA SKETCHWARE
     function execute() {
-        if(!document.getElementById('sCode').value) return alert("Nothing to inject!");
-        alert("STATUS: Injection process started...");
+        const code = document.getElementById('sCode').value;
+        if(!code) return alert("Nothing to inject!");
+        
+        if(window.AndroidInterface) {
+            window.AndroidInterface.injectScript(code);
+        } else {
+            alert("Injection process started (Debug Mode)");
+        }
     }
 </script>
 
 </body>
-  </html>
-  
+</html>
