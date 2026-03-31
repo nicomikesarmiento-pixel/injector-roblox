@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INJECTOR ROBLOX V12</title>
+    <style>
+        :root { --neon: #00f2ff; --bg: #050505; --card-bg: rgba(15, 15, 15, 0.98); }
+        
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background: var(--bg); font-family: 'Segoe UI', sans-serif; 
+            color: #fff; overflow: hidden; display: flex; 
+            flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        /* MAIN INJECTOR BOX */
+        .injector-box {
+            background: var(--card-bg);
+            border: 1px solid var(--neon);
+            border-radius: 15px;
+            width: 85%;
+            max-width: 320px;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.15);
+            z-index: 10;
+            margin-bottom: 20px;
+        }
+
+        h2 { 
+            font-size: 1rem; text-align: center; color: var(--neon); 
+            margin: 0 0 15px 0; letter-spacing: 2px; text-transform: uppercase;
+            border-bottom: 1px solid #222; padding-bottom: 10px;
+        }
+
+        input, textarea {
+            width: 100%; background: #000; border: 1px solid #333; color: #fff;
+            padding: 12px; margin-bottom: 12px; border-radius: 8px; outline: none; 
+            box-sizing: border-box; font-family: monospace; font-size: 0.8rem;
+            border-left: 3px solid var(--neon);
+        }
+
+        .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        button { cursor: pointer; transition: 0.3s; border-radius: 6px; font-weight: bold; text-transform: uppercase; }
+
+        .btn-sec { background: #1a1a1a; border: 1px solid #444; color: #888; padding: 10px; font-size: 0.7rem; }
+        .btn-sec:hover { border-color: var(--neon); color: #fff; background: #222; }
+
+        .btn-inject {
+            width: 100%; background: var(--neon); color: #000; border: none;
+            padding: 14px; margin-top: 15px; font-size: 0.85rem; letter-spacing: 2px;
+            box-shadow: 0 0 15px var(--neon);
+        }
+
+        /* MODAL LIST */
+        #hubModal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 100; align-items: center; justify-content: center;
+        }
+        .modal-content { background: #0d1117; border: 1px solid var(--neon); width: 85%; max-width: 300px; padding: 20px; border-radius: 12px; }
+        #listItems { max-height: 250px; overflow-y: auto; margin-top: 15px; }
+        .save-item { background: #161b22; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--neon); }
+        .save-item span { font-size: 0.8rem; display: block; margin-bottom: 8px; color: #ccc; }
+        .save-btns { display: flex; gap: 8px; }
+        .btn-exec { flex: 2; background: var(--neon); border: none; font-size: 0.65rem; padding: 8px; color: #000; }
+        .btn-del { flex: 1; background: #ff4444; color: #fff; border: none; font-size: 0.65rem; padding: 8px; }
+
+        /* FOOTER & DOWNLOAD AREA */
+        .footer-area {
+            display: flex; flex-direction: column; align-items: center; gap: 15px;
+        }
+
+        .roblox-icon {
+            width: 50px; height: 50px;
+            animation: jump 1.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+        }
+        @keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        .btn-download {
+            background: transparent; border: 1px dashed var(--neon); color: var(--neon);
+            padding: 10px 20px; font-size: 0.75rem; border-radius: 50px;
+            text-decoration: none; display: flex; align-items: center; gap: 10px;
+            transition: 0.3s; font-weight: bold;
+        }
+        .btn-download:hover { background: var(--neon); color: #000; border-style: solid; box-shadow: 0 0 15px var(--neon); }
+        .arrow { font-size: 1rem; animation: bounceDown 1s infinite; }
+        @keyframes bounceDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
+
+        .dev-tag { font-size: 0.6rem; color: #444; letter-spacing: 2px; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="injector-box">
+    <h2>INJECTOR ROBLOX</h2>
+    
+    <input type="text" id="sName" placeholder="SCRIPT_NAME">
+    <textarea id="sCode" rows="5" placeholder="PASTE_LUAU_CODE"></textarea>
+
+    <div class="btn-row">
+        <button class="btn-sec" onclick="saveScript()">[ SAVE ]</button>
+        <button class="btn-sec" onclick="openHub()">[ LIST ]</button>
+    </div>
+
+    <button class="btn-inject" onclick="execute()">INITIALIZE INJECTION</button>
+</div>
+
+<div id="hubModal">
+    <div class="modal-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid #333; padding-bottom: 10px;">
+            <span style="font-size:0.8rem; color:var(--neon); font-weight:bold;">SAVED_SCRIPTS</span>
+            <button onclick="closeHub()" style="background:none; border:none; color:#fff; font-size:1.5rem;">✕</button>
+        </div>
+        <div id="listItems"></div>
+    </div>
+</div>
+
+<div class="footer-area">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg" class="roblox-icon" alt="Roblox Icon">
+    
+    <a href="https://www.google.com" id="downloadLink" class="btn-download" target="_blank">
+        DOWNLOAD APP VERSION <span class="arrow">⬇</span>
+    </a>
+
+    <div class="dev-tag">DEVELOPED BY: <b>NICO SARMIENTO</b></div>
+</div>
+
+<script>
+    // Lahat ng dating logic ay working dito (Save, List, Exec, Delete)
+    function saveScript() {
+        const name = document.getElementById('sName').value || "Script_" + Math.floor(Math.random()*999);
+        const code = document.getElementById('sCode').value;
+        if(!code) return alert("Error: Empty code!");
+        let db = JSON.parse(localStorage.getItem('roblox_v12')) || [];
+        db.push({ name, code });
+        localStorage.setItem('roblox_v12', JSON.stringify(db));
+        document.getElementById('sName').value = "";
+        document.getElementById('sCode').value = "";
+        alert("Script Saved!");
+    }
+
+    function openHub() {
+        const list = document.getElementById('listItems');
+        list.innerHTML = "";
+        let db = JSON.parse(localStorage.getItem('roblox_v12')) || [];
+        if(db.length === 0) list.innerHTML = "<p style='font-size:0.7rem; text-align:center;'>Empty Database</p>";
+        db.forEach((item, index) => {
+            list.innerHTML += `
+                <div class="save-item">
+                    <span>${item.name}</span>
+                    <div class="save-btns">
+                        <button class="btn-exec" onclick="load(${index})">EXECUTE</button>
+                        <button class="btn-del" onclick="del(${index})">DEL</button>
+                    </div>
+                </div>`;
+        });
+        document.getElementById('hubModal').style.display = "flex";
+    }
+
+    function closeHub() { document.getElementById('hubModal').style.display = "none"; }
+
+    function load(i) {
+        let db = JSON.parse(localStorage.getItem('roblox_v12')) || [];
+        document.getElementById('sCode').value = db[i].code;
+        closeHub(); execute();
+    }
+
+    function del(i) {
+        let db = JSON.parse(localStorage.getItem('roblox_v12')) || [];
+        db.splice(i, 1);
+        localStorage.setItem('roblox_v12', JSON.stringify(db));
+        openHub();
+    }
+
+    function execute() {
+        if(!document.getElementById('sCode').value) return alert("Nothing to inject!");
+        alert("STATUS: Injection process started...");
+    }
+</script>
+
+</body>
+  </html>
+  
